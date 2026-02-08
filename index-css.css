@@ -1,0 +1,617 @@
+:root {
+    /* --- COLORS: PALETTE --- */
+    --bg-color: #f8f9fa;
+    --highlight-color: #f36c00;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --border-color: #dee2e6;
+    --vs-vi-color: #3b82f6;
+    --tak-color: #16a34a;
+    --nie-color: #dc2626;
+
+    --rgba-warning-color: 255, 193, 7;
+    --rgba-success-color: 40, 167, 69;
+    --rgba-danger-color: 220, 53, 69;
+    --rgba-info-color: 23, 162, 184;
+    --rgba-vs-vi-color: 59, 130, 246;
+    --rgba-tak-color: 22, 163, 74;
+    --rgba-nie-color: 220, 38, 38;
+
+    /* RGB (comma-separated for rgba()) */
+    --highlight-rgb: 243, 108, 0;
+    --rgba-highlight: 243, 108, 0;
+    --rgba-bg-primary: 255, 255, 255;
+    --text-color-rgb: 33, 37, 41;
+    --text-muted-rgb: 108, 117, 125;
+    --bg-rgb: 248, 249, 250;
+    --border-color-rgb: 222, 226, 230;
+
+    /* --- COLORS: TEXT SPECIFIC --- */
+    --vs-trailer-text: #117a65;
+    --r-trailer-text: #2471a3;
+    --missing-scac-text: #c54235;
+    --visit-inbound-text: #2471a3;
+    --visit-outbound-text: #b5830e;
+
+    /* --- SETTINGS --- */
+    --font-family: "JetBrains Mono", monaco, courier, monospace;
+    --font-main: var(--font-family);
+    --transition-speed: 0.2s;
+    --screen-bg: #f0f0f0;
+    --screen-border: #adb5bd;
+
+    /* --- LIGHT THEME DEFAULTS --- */
+    --bg: #f8f9fa;
+    --bg-primary: #fff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #fff;
+
+    --panel-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --input-bg: #f5f5f5;
+
+    --text-color: #212529;
+    --text-primary: #212529;
+    --text-muted: #6c757d;
+    --text-inverse: #fff;
+
+    --border-color-hover: #e0e0e0;
+    --hover-bg: #eee;
+    --grid-color: rgba(0, 0, 0, 0.03);
+    --bg-grid-size: 20px 20px;
+    --bg-grid: linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+
+    /* Backgrounds for specific states (light) */
+    --tak-bg: rgba(22, 163, 74, 0.1);
+    --nie-bg: rgba(220, 38, 38, 0.1);
+    --vs-vi-bg: rgba(59, 130, 246, 0.1);
+    --highlight-bg: rgba(243, 108, 0, 0.1);
+    --latest-bg: rgba(189, 189, 189, 0.15);
+    --highlight-soft: var(--highlight-bg);
+
+    --filter-icon: invert(0);
+    --filter-icon-hover: invert(24%) sepia(93%) saturate(2130%) hue-rotate(353deg) brightness(97%) contrast(108%);
+    --filter-icon-success: invert(55%) sepia(44%) saturate(551%) hue-rotate(89deg) brightness(93%) contrast(97%);
+    --filter-icon-danger: invert(36%) sepia(83%) saturate(2030%) hue-rotate(353deg) brightness(97%) contrast(108%);
+    --metal-gradient: linear-gradient(165deg, var(--bg-primary) 0%, var(--panel-bg) 45%, var(--border-color-hover) 100%);
+    --metal-gradient-hover: linear-gradient(170deg, var(--bg-tertiary) 0%, var(--hover-bg) 45%, var(--border-color-hover) 100%);
+    --stripe-accent: rgba(0, 0, 0, 0.06);
+    --bg-stripe-pattern: linear-gradient(135deg,
+            transparent 0%,
+            transparent 25%,
+            var(--stripe-accent) 25%,
+            var(--stripe-accent) 50%,
+            transparent 50%,
+            transparent 75%,
+            var(--stripe-accent) 75%,
+            var(--stripe-accent) 100%);
+    --bg-stripe-size: 20px 20px;
+    --shadow-drop: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px, rgba(78, 78, 78, 0.185) 0px 2px 6px 2px;
+    --shadow-inset: inset rgba(78, 78, 78, 0.185) 0px 2px 6px 2px, inset rgba(0, 0, 0, 0.3) 0px 1px 2px 0px;
+    --shadow-hover: rgba(32, 32, 32, 0.2) 0px 0px 0px 1px, rgba(0, 0, 0, 0.325) 0px 2px 3px -0.5px, rgba(255, 255, 255, 0.04) 0px 0.5px 0px inset;
+
+    /* Syntax Highlighting */
+    --json-key: var(--highlight-color);
+    --json-string: var(--success-color);
+    --json-number: #005cc5;
+    --json-boolean: var(--danger-color);
+
+    /* UI aliases (używane w headerze, przyciskach, footerze) */
+    --ui-accent: var(--highlight-color);
+    --ui-text: var(--text-muted);
+    --ui-bg: var(--panel-bg);
+    --ui-border: var(--border-color);
+}
+
+/* Wyłączenie transition przy zmianie motywu – jedna klatka, bez przycinania */
+:root.theme-switching,
+:root.theme-switching *,
+:root.theme-switching *::before,
+:root.theme-switching *::after {
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+}
+
+:root[theme="dark"] {
+    /* --- DARK THEME OVERRIDES --- */
+    --bg-color: #1a1a1a;
+    --bg: #121212;
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #252526;
+    --bg-tertiary: #2e2e2e;
+    --border-color: #2a2a2a;
+    --panel-bg: #2a2a2a;
+    --card-bg: #303030;
+    --input-bg: #2d2d30;
+    --highlight-color: #ff7300;
+    --highlight-color-hover: #ffb74d;
+    --text-color: #e0e0e0;
+    --text-primary: #e0e0e0;
+    --text-muted: #858585;
+    --text-inverse: #000;
+    --screen-bg: #0d0d0d;
+    --screen-border: #2a2a2a;
+    --border-color-hover: #444;
+    --hover-bg: #3c3c3c;
+    --grid-color: rgba(255, 255, 255, 0.03);
+    --bg-grid-size: 20px 20px;
+    --bg-grid: linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    --rgba-warning-color: 255, 193, 7;
+    --rgba-success-color: 40, 167, 69;
+    --rgba-danger-color: 220, 53, 69;
+    --rgba-info-color: 23, 162, 184;
+    --rgba-vs-vi-color: 59, 130, 246;
+    --rgba-tak-color: 22, 163, 74;
+    --rgba-nie-color: 220, 38, 38;
+
+    --highlight-rgb: 243, 108, 0;
+    --rgba-highlight: 243, 108, 0;
+    --rgba-bg-primary: 30, 30, 30;
+    --text-color-rgb: 224, 224, 224;
+    --text-muted-rgb: 133, 133, 133;
+    --bg-rgb: 18, 18, 18;
+    --border-color-rgb: 42, 42, 42;
+
+    /* Adjusted text colors for dark mode readability */
+    --vs-trailer-text: #4db6ac;
+    --r-trailer-text: #64b5f6;
+    --missing-scac-text: #e57373;
+    --visit-inbound-text: #ffb74d;
+    --visit-outbound-text: #81c784;
+
+    /* Backgrounds for specific states (dark) */
+    --tak-bg: rgba(34, 197, 94, 0.15);
+    --nie-bg: rgba(239, 68, 68, 0.15);
+    --vs-vi-bg: rgba(96, 165, 250, 0.15);
+    --highlight-bg: rgba(243, 108, 0, 0.15);
+    --latest-bg: rgba(189, 189, 189, 0.15);
+    --highlight-soft: var(--highlight-bg);
+
+    --filter-icon: invert(1) brightness(0.9) saturate(0.9);
+    --filter-icon-hover: invert(36%) sepia(83%) saturate(2030%) hue-rotate(353deg) brightness(97%) contrast(108%);
+    --filter-icon-success: invert(55%) sepia(44%) saturate(551%) hue-rotate(89deg) brightness(93%) contrast(97%);
+    --filter-icon-danger: invert(36%) sepia(83%) saturate(2030%) hue-rotate(353deg) brightness(97%) contrast(108%);
+    --metal-gradient: linear-gradient(165deg, var(--panel-bg) 0%, var(--bg-primary) 45%, var(--bg-tertiary) 100%);
+    --metal-gradient-hover: linear-gradient(170deg, var(--bg-tertiary) 0%, var(--hover-bg) 45%, var(--border-color-hover) 100%);
+    --stripe-accent: rgba(255, 255, 255, 0.06);
+    --bg-stripe-pattern: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-tertiary) 25%, var(--stripe-accent) 25%, var(--stripe-accent) 50%, var(--bg-tertiary) 50%, var(--bg-tertiary) 75%, var(--stripe-accent) 75%, var(--stripe-accent) 100%);
+    --bg-stripe-size: 20px 20px;
+    --shadow-drop: rgba(32, 32, 32, 0.4) 0px 0px 0px 2px, rgba(0, 0, 0, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    --shadow-inset: inset 0px 0px 0px 2px rgba(32, 32, 32, 0.4), inset 0px 4px 6px -1px rgba(0, 0, 0, 0.65), inset 0px 1px 0px rgba(255, 255, 255, 0.08);
+    --shadow-hover: rgba(32, 32, 32, 0.2) 0px 0px 0px 1px, rgba(0, 0, 0, 0.325) 0px 2px 3px -0.5px, rgba(255, 255, 255, 0.04) 0px 0.5px 0px inset;
+
+    /* Syntax Highlighting Dark */
+    --json-key: var(--highlight-color);
+    --json-string: #85e89d;
+    --json-number: #79b8ff;
+    --json-boolean: #f97583;
+
+    /* UI aliases (dark) */
+    --ui-accent: var(--highlight-color);
+    --ui-text: var(--text-muted);
+    --ui-bg: var(--panel-bg);
+    --ui-border: var(--border-color);
+}
+
+* {
+    box-sizing: border-box;
+    border-radius: 0 !important;
+    user-select: none !important;
+    scrollbar-width: none !important;
+    outline: none !important;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--panel-bg);
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    background-image: var(--bg-grid);
+}
+
+header {
+    background: var(--metal-gradient);
+    border-bottom: var(--border-color);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-drop);
+    z-index: 100;
+    background-image: var(--bg-grid);
+}
+
+.terminal-info {
+    font-family: 'Share Tech Mono', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
+
+.main-container {
+    --sidebar-width: 400px;
+    display: grid;
+    grid-template-columns: 1fr 6px var(--sidebar-width) 6px 1fr;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.resize-gutter {
+    cursor: col-resize;
+    background: var(--border-color);
+    position: relative;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.resize-gutter:hover,
+.resize-gutter.resizing {
+    background: var(--visit-inbound-text);
+}
+
+.resize-gutter::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2px;
+    right: -2px;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--panel-bg);
+    border: var(--border-color);
+    height: 100%;
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 0.6rem 1rem;
+    background: var(--hover-bg);
+    border-bottom: var(--border-color);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.editor-container {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.sidebar {
+    background: var(--bg-tertiary);
+    border-left: var(--border-color);
+    border-right: var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background-image: var(--bg-stripe-pattern);
+    background-size: var(--bg-stripe-size);
+}
+
+.var-group {
+    padding: 0.8rem;
+    border-bottom: var(--border-color);
+}
+
+.selection-context-panel {
+    display: none;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    background: var(--highlight-bg);
+    border: 1px dashed var(--ui-accent);
+}
+
+.selection-context-panel .var-grid {
+    margin-top: 0.25rem;
+}
+
+.var-group-title {
+    font-size: 0.65rem;
+    color: var(--ui-accent);
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-left: 3px solid var(--ui-accent);
+    padding-left: 5px;
+}
+
+.var-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+}
+
+.var-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 0.45rem;
+    background: var(--bg-tertiary);
+    border: var(--border-color);
+    color: var(--text-muted);
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.1s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-shadow: var(--shadow-drop);
+}
+
+.var-btn::before {
+    content: '';
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    background: var(--btn-preview, var(--border-color));
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+}
+
+.var-btn:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.var-btn:active {
+    box-shadow: var(--shadow-active);
+    color: var(--text-primary);
+}
+
+.detected-items {
+    padding: 0.8rem;
+    background: var(--bg-tertiary);
+    flex: 1;
+    overflow-y: auto;
+    box-shadow: var(--shadow-drop);
+    background-image: var(--bg-stripe-pattern);
+    background-size: 50px 50px;
+}
+
+.detected-row {
+    padding: 0.6rem;
+    margin-bottom: 4px;
+    background: var(--panel-bg);
+    border: var(--border-color);
+    font-size: 0.7rem;
+    cursor: pointer;
+    word-break: break-all;
+    transition: 0.2s;
+    box-shadow: var(--shadow-drop);
+}
+
+.detected-row:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.detected-row.active {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.detected-row.done {
+    border-left: var(--border-color);
+    opacity: 0.6;
+}
+
+.detected-row.auto-ready {
+    border-left: 3px solid var(--success-color);
+}
+
+.action-btn.small {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+}
+
+/* Monaco Markers */
+.monaco-line-highlight {
+    background: var(--bg-tertiary);
+    width: 100% !important;
+}
+
+.monaco-word-highlight {
+    background: var(--bg-tertiary);
+    border-bottom: var(--border-color);
+    font-weight: bold;
+}
+
+.monaco-applied-highlight {
+    background: var(--bg-tertiary);
+    width: 100% !important;
+}
+
+.monaco-applied-word {
+    color: var(--text-muted);
+    font-weight: bold;
+    border-bottom: var(--border-color);
+}
+
+.bg-controls {
+    padding: 0.8rem 1.5rem;
+    background: var(--panel-bg);
+    border-top: var(--border-color);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    box-shadow: var(--shadow-drop);
+}
+
+.action-btn {
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    border: var(--border-color);
+    padding: 0.6rem 1.2rem;
+    font-family: 'Share Tech Mono', sans-serif;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    transition: 0.2s;
+    box-shadow: var(--shadow-drop);
+}
+
+.action-btn:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.action-btn:active {
+    box-shadow: var(--shadow-inset);
+}
+
+.action-btn.fill {
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+}
+
+.action-btn.fill:hover {
+    background: var(--hover-bg);
+    color: var(--highlight-color);
+}
+
+.action-btn.fill:active {
+    box-shadow: var(--shadow-inset);
+    color: var(--text-muted);
+}
+
+.badge-var {
+    font-size: 0.55rem;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 1px 4px;
+    margin-bottom: 2px;
+    display: inline-block;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--ui-accent);
+}
+
+.version {
+    color: var(--highlight-color);
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+/* SCAN BUTTON */
+.scan-btn {
+    color: var(--text-muted);
+    box-shadow: var(--shadow-drop);
+    transition: all 0.2s;
+    background-image: var(--bg-tertiary);
+    font-weight: 500;
+}
+
+.scan-btn i {
+    color: var(--json-string);
+    transition: all 0.2s;
+}
+
+.scan-btn:hover i {
+    color: var(--text-primary);
+}
+
+.scan-btn:active i {
+    color: var(--text-muted);
+}
+
+.scan-btn:hover {
+    color: var(--json-string);
+    background-image: var(--hover-bg);
+}
+
+.scan-btn:active {
+    box-shadow: var(--shadow-inset);
+    color: var(--text-muted);
+    transition: border-left-color 0.1s;
+}
+
+/* LOAD BUTTON */
+.auto-btn {
+    color: var(--text-primary);
+    box-shadow: var(--shadow-drop);
+    background: var(--bg-tertiary);
+    transition: all 0.2s;
+}
+
+.auto-btn:hover {
+    color: var(--highlight-color);
+    background: var(--hover-bg);
+}
+
+.auto-btn i {
+    color: var(--highlight-color);
+    transition: all 0.2s;
+}
+
+.auto-btn:hover i {
+    color: var(--text-primary);
+}
+
+.auto-btn:active i {
+    color: var(--text-muted);
+}
+
+.auto-btn:hover {
+    color: var(--highlight-color);
+    background-image: var(--hover-bg);
+}
+
+.auto-btn:active {
+    box-shadow: var(--shadow-inset);
+    color: var(--text-muted);
+}
+
+.load-btn i {
+    color: var(--highlight-color);
+    transition: all 0.2s;
+}
+
+.load-btn:hover i {
+    color: var(--text-primary);
+}
+
+.load-btn:active i {
+    color: var(--text-muted);
+}
+
+.load-btn:hover {
+    color: var(--highlight-color);
+    background-image: var(--hover-bg);
+}
+
+.load-btn:active {
+    box-shadow: var(--shadow-inset);
+    color: var(--text-muted);
+    transition: all 0.01s;
+}
