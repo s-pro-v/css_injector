@@ -271,12 +271,46 @@ function handleSelectionChange(e) {
     }
 }
 
+/** Dla border / border-left|top|right|bottom zamienia w wartości tylko kolor (cały token); width i style zostają. */
+function replaceOnlyBorderColor(value, varName) {
+    const borderStyles = new Set(['solid', 'dashed', 'dotted', 'double', 'groove', 'ridge', 'inset', 'outset', 'none', 'hidden']);
+    // Szukaj ostatniego koloru jako całości (hex, rgb/rgba, hsl/hsla, var(...), słowo)
+    const colorPattern = /#[\da-fA-F]{3,8}|rgba?\([^)]+\)|hsla?\([^)]+\)|var\([^)]+\)|[a-zA-Z]+/g;
+    let match;
+    let lastColor = null;
+    while ((match = colorPattern.exec(value)) !== null) {
+        const token = match[0];
+        const isColor = /^#|^rgba?\(|^hsla?\(|^var\(/.test(token) ||
+            (/^[a-zA-Z]+$/.test(token) && !borderStyles.has(token.toLowerCase()));
+        if (isColor) lastColor = match;
+    }
+    if (!lastColor) return value;
+    const before = value.slice(0, lastColor.index).trimEnd();
+    const after = value.slice(lastColor.index + lastColor[0].length).trimStart();
+    return (before ? before + ' ' : '') + varName + (after ? ' ' + after : '');
+}
+
 function injectAtSelection(varName) {
     if (!outputEditor) return;
+    const model = outputEditor.getModel();
     const selection = outputEditor.getSelection();
+    const selectedText = model.getValueInRange(selection);
+
+    // Jeśli zaznaczona jest cała deklaracja (prop: value;), zamień tylko wartość — zachowaj property
+    const declMatch = selectedText.match(/^\s*([a-zA-Z][a-zA-Z0-9-]*)\s*:\s*([^;]+);\s*$/);
+    let textToInsert = varName;
+    if (declMatch) {
+        const indent = selectedText.slice(0, selectedText.indexOf(declMatch[1]));
+        const prop = declMatch[1].toLowerCase();
+        const rawValue = declMatch[2].trim();
+        const isBorderShorthand = /^border(-(?:left|top|right|bottom))?$/.test(prop);
+        const newValue = isBorderShorthand ? replaceOnlyBorderColor(rawValue, varName) : varName;
+        textToInsert = indent + declMatch[1] + ': ' + newValue + ';';
+    }
+
     outputEditor.executeEdits('selection-inject', [{
         range: selection,
-        text: varName,
+        text: textToInsert,
         forceMoveMarkers: true
     }]);
     setTimeout(refreshScanner, 100);
@@ -366,7 +400,9 @@ function runSmartAutoRefactor() {
             const ranges = model.findMatches(match.full, false, false, true, null, true);
             const targetRange = ranges[match.occurrenceIndex];
             if (targetRange) {
-                edits.push({ range: targetRange.range, text: `${match.prop}: ${targetVar};`, forceMoveMarkers: true });
+                const isBorderShorthand = /^border(-(?:left|top|right|bottom))?$/.test(match.prop.toLowerCase());
+                const newValue = isBorderShorthand ? replaceOnlyBorderColor(match.val, targetVar) : targetVar;
+                edits.push({ range: targetRange.range, text: `${match.prop}: ${newValue};`, forceMoveMarkers: true });
             }
         }
     });
