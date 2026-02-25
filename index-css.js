@@ -224,7 +224,11 @@ require(['vs/editor/editor.main'], function () {
         handleSelectionChange(e);
     });
 
-    loadSourceToWorkbench();
+    if (loadLocal()) {
+        refreshScanner();
+    } else {
+        loadSourceToWorkbench();
+    }
 });
 
 function handleSelectionChange(e) {
@@ -316,10 +320,58 @@ function injectAtSelection(varName) {
     setTimeout(refreshScanner, 100);
 }
 
+const STORAGE_KEY_INPUT = 'css-injector-input';
+const STORAGE_KEY_OUTPUT = 'css-injector-output';
+
 function loadSourceToWorkbench() {
     if (!inputEditor || !outputEditor) return;
     outputEditor.setValue(inputEditor.getValue());
     refreshScanner();
+}
+
+function clearWorkbench() {
+    if (!inputEditor || !outputEditor) return;
+    inputEditor.setValue('');
+    outputEditor.setValue('');
+    detectedMatches = [];
+    currentSelectionDecorations = outputEditor.deltaDecorations(currentSelectionDecorations, []);
+    refreshScanner();
+    const footerLog = document.getElementById('footerLog');
+    if (footerLog) footerLog.innerText = 'CLEARED';
+}
+
+function saveLocal() {
+    if (!inputEditor || !outputEditor) return;
+    try {
+        localStorage.setItem(STORAGE_KEY_INPUT, inputEditor.getValue());
+        localStorage.setItem(STORAGE_KEY_OUTPUT, outputEditor.getValue());
+        const footerLog = document.getElementById('footerLog');
+        if (footerLog) {
+            footerLog.innerText = 'SAVED';
+            setTimeout(() => { footerLog.innerText = 'READY'; }, 2000);
+        }
+    } catch (e) {
+        const footerLog = document.getElementById('footerLog');
+        if (footerLog) footerLog.innerText = 'SAVE_ERR';
+    }
+}
+
+function loadLocal() {
+    if (!inputEditor || !outputEditor) return false;
+    try {
+        const savedInput = localStorage.getItem(STORAGE_KEY_INPUT);
+        const savedOutput = localStorage.getItem(STORAGE_KEY_OUTPUT);
+        if (savedInput != null) inputEditor.setValue(savedInput);
+        if (savedOutput != null) outputEditor.setValue(savedOutput);
+        return savedInput != null || savedOutput != null;
+    } catch (e) {
+        return false;
+    }
+}
+
+function escapeHtml(s) {
+    if (typeof s !== 'string') return '';
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function refreshScanner() {
@@ -347,7 +399,8 @@ function refreshScanner() {
             const preText = css.substring(0, match.index);
             const lastBraceIndex = preText.lastIndexOf('{');
             const lastBlockStart = preText.lastIndexOf('}', lastBraceIndex);
-            const selector = preText.substring(lastBlockStart + 1, lastBraceIndex).trim();
+            let selector = preText.substring(lastBlockStart + 1, lastBraceIndex).trim();
+            if (selector.includes('\n')) selector = selector.split('\n').pop().trim();
 
             occurrences[fullLine] = (occurrences[fullLine] || 0) + 1;
             const canAutoInject = true;
@@ -361,7 +414,7 @@ function refreshScanner() {
 
             const div = document.createElement('div');
             div.className = 'detected-row auto-ready';
-            div.innerHTML = `<div><span style="opacity:0.5; font-size:0.6rem">${selector}</span><br><strong>${prop}</strong>: ${val}</div>`;
+            div.innerHTML = `<div><span style="opacity:0.5; font-size:0.6rem">${escapeHtml(selector)}</span><br><strong>${escapeHtml(prop)}</strong>: ${escapeHtml(val)}</div>`;
             div.onclick = () => selectInEditor(matchData);
             div.dataset.id = counter;
             listContainer.appendChild(div);
